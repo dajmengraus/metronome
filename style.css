@@ -49,6 +49,10 @@ body {
     background: var(--color-beat-accent);
 }
 
+.beat--selected {
+    border: 2rem solid red;
+}
+
 .start-stop {
     display: flex;
     justify-content: center;
