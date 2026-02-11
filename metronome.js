@@ -12,31 +12,44 @@ let beatUnit = 4;
 
 let beat = 0;
 let intervalId = null;
-const interval = (60 / bpm) * 1000;
+
+function getInterval() {
+    return (60 / bpm) * 1000;
+}
+
+function clearBeats() {
+    for (let beat of beats.children) {
+        beat.classList.remove("beat--selected");
+    }
+}
 
 function start() {
-    for (let beat of beats.children) {
-        console.log(beat);
-    }
     if (intervalId !== null) return;
 
     intervalId = setInterval(() => {
-        beat = (beat % beatsPerBar) + 1;
-        if (beat === 1) {
+        clearBeats();
+
+        beats.children[beat].classList.add("beat--selected");
+
+        if (beat === 0) {
             beatAccentAudio.currentTime = 0;
             beatAccentAudio.play()
         } else {
             beatAudio.currentTime = 0;
             beatAudio.play();
         }
-    }, interval)
+
+        beat = (beat + 1) % beatsPerBar;
+
+    }, getInterval());
 }
 
 function stop() {
+    clearBeats();
     clearInterval(intervalId);
     intervalId = null;
     beat = 0;
 }
 
 btnStart.addEventListener("click", start);
-btnStop.addEventListener("click", stop)
+btnStop.addEventListener("click", stop);
