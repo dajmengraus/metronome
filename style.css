@@ -50,7 +50,7 @@ body {
 }
 
 .beat--selected {
-    border: 2rem solid red;
+    border: 0.5rem solid red;
 }
 
 .start-stop {
@@ -67,4 +67,5 @@ body {
     border: none;
     padding: 1rem;
     border-radius: 1rem;
+    cursor: pointer;
 }

@@ -7,18 +7,17 @@
     <title>Metronome</title>
     <link rel="stylesheet" href="style.css">
     <script src="metronome.js" defer></script>
-    <script src="ui.js" defer></script>
 </head>
 
 <body>
     <div class="app">
         <h1>Metronome</h1>
         <h2>BPM: 100</h2>
-        <div class="beats">
-            <div class="beat beat--accent" id="beat-accent"></div>
-            <div class="beat" id="beat"></div>
-            <div class="beat" id="beat"></div>
-            <div class="beat" id="beat"></div>
+        <div class="beats" id="beats">
+            <div class="beat beat--accent"></div>
+            <div class="beat"></div>
+            <div class="beat"></div>
+            <div class="beat"></div>
         </div>
         <div class="start-stop">
             <button type="button" class="btn-primary" id="btn-start">Start</button>
