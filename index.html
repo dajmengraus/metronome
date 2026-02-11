@@ -12,7 +12,13 @@
 <body>
     <div class="app">
         <h1>Metronome</h1>
-        <h2>BPM: 100</h2>
+        <h2>BPM: <span id="bpm">100</span></h2>
+        <div class="change-bpm">
+            <button type="button" class="btn-primary" id="decrease-five-bpm">--</button>
+            <button type="button" class="btn-primary" id="decrease-bpm">-</button>
+            <button type="button" class="btn-primary" id="increase-bpm">+</button>
+            <button type="button" class="btn-primary" id="increase-five-bpm">++</button>
+        </div>
         <div class="beats" id="beats">
             <div class="beat beat--accent"></div>
             <div class="beat"></div>
