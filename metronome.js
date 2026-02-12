@@ -5,6 +5,7 @@
 const btnStart = document.getElementById("btn-start");
 const btnStop = document.getElementById("btn-stop");
 
+const slider = document.getElementById("slider");
 const btnDecreaseBpm = document.getElementById("decrease-bpm");
 const btnIncreaseBpm = document.getElementById("increase-bpm");
 const btnDecreaseFiveBpm = document.getElementById("decrease-five-bpm");
@@ -186,6 +187,10 @@ function decreaseBpm(val) {
 
 btnStart.addEventListener("click", start);
 btnStop.addEventListener("click", stop);
+
+slider.oninput = function() {
+    updateBpm(this.value);
+}
 
 btnDecreaseBpm.addEventListener("click", () => decreaseBpm(1));
 btnIncreaseBpm.addEventListener("click", () => increaseBpm(1));
