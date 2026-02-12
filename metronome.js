@@ -10,6 +10,8 @@ const btnDecreaseBpm = document.getElementById("decrease-bpm");
 const btnIncreaseBpm = document.getElementById("increase-bpm");
 const btnDecreaseFiveBpm = document.getElementById("decrease-five-bpm");
 const btnIncreaseFiveBpm = document.getElementById("increase-five-bpm");
+const btnDecreaseBeats = document.getElementById("decrease-beats");
+const btnIncreaseBeats = document.getElementById("increase-beats");
 
 const bpmText = document.getElementById("bpm");
 const beats = document.getElementById("beats");
@@ -182,6 +184,23 @@ function decreaseBpm(val) {
 
 
 // =====================
+// BPM CONTROL
+// =====================
+
+function increaseBeats() {
+    beatsPerBar++;
+    const beatDiv = document.createElement("div");
+    beatDiv.classList.add("beat");
+    beats.appendChild(beatDiv);
+}
+
+function decreaseBeats() {
+    beatsPerBar--;
+    beats.children[beats.children.length - 1].remove();
+}
+
+
+// =====================
 // EVENTS
 // =====================
 
@@ -197,3 +216,6 @@ btnIncreaseBpm.addEventListener("click", () => increaseBpm(1));
 
 btnDecreaseFiveBpm.addEventListener("click", () => decreaseBpm(5));
 btnIncreaseFiveBpm.addEventListener("click", () => increaseBpm(5));
+
+btnDecreaseBeats.addEventListener("click", decreaseBeats);
+btnIncreaseBeats.addEventListener("click", increaseBeats);
