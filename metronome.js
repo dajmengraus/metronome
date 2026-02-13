@@ -14,6 +14,7 @@ const btnDecreaseBeats = document.getElementById("decrease-beats");
 const btnIncreaseBeats = document.getElementById("increase-beats");
 
 const bpmText = document.getElementById("bpm");
+const numeratorText = document.getElementById("numerator");
 const beats = document.getElementById("beats");
 
 
@@ -32,7 +33,7 @@ let accentBuffer = null;
 // =====================
 
 let bpm = 100;
-let beatsPerBar = 4;
+let numerator = numeratorText.innerText;
 
 let currentBeat = 0;
 let nextNoteTime = 0;
@@ -130,7 +131,7 @@ function scheduler() {
 
         // Next beat
         nextNoteTime += getBeatLength();
-        currentBeat = (currentBeat + 1) % beatsPerBar;
+        currentBeat = (currentBeat + 1) % numerator;
     }
 }
 
@@ -188,14 +189,16 @@ function decreaseBpm(val) {
 // =====================
 
 function increaseBeats() {
-    beatsPerBar++;
+    numerator++;
+    numeratorText.innerText = numerator;
     const beatDiv = document.createElement("div");
     beatDiv.classList.add("beat");
     beats.appendChild(beatDiv);
 }
 
 function decreaseBeats() {
-    beatsPerBar--;
+    numerator--;
+    numeratorText.innerText = numerator;
     beats.children[beats.children.length - 1].remove();
 }
 
