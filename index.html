@@ -12,7 +12,21 @@
 <body>
     <div class="app">
         <h1>Metronome</h1>
-        <h2>Time signature: <span id="numerator">4</span> / <span id="denominator">4</span></h2>
+        <div class="time-signature">
+            <h2>Time signature:
+            <div class="numerator">
+                <button type="button" class="btn-primary" id="decrease-numerator">-</button>
+                <h2 id="numerator">4</h2>
+                <button type="button" class="btn-primary" id="increase-numerator">+</button>
+            </div>
+            <div class="denominator">
+                <button type="button" class="btn-primary" id="decrease-denominator">-</button>
+                <h2 id="denominator">4</h2>
+                <button type="button" class="btn-primary" id="increase-denominator">+</button>
+            </div>
+        </div>
+        
+
         <h2>BPM: <span id="bpm">100</span></h2>
         <div class="slider-container">
             <input type="range" min="30" max="300" value="100" class="slider" id="slider">
@@ -28,10 +42,6 @@
             <div class="beat"></div>
             <div class="beat"></div>
             <div class="beat"></div>
-        </div>
-        <div class="change-beats">
-            <button type="button" class="btn-primary" id="decrease-beats">-</button>
-            <button type="button" class="btn-primary" id="increase-beats">+</button>
         </div>
         <div class="start-stop">
             <button type="button" class="btn-primary" id="btn-start">Start</button>

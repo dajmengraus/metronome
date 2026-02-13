@@ -10,11 +10,14 @@ const btnDecreaseBpm = document.getElementById("decrease-bpm");
 const btnIncreaseBpm = document.getElementById("increase-bpm");
 const btnDecreaseFiveBpm = document.getElementById("decrease-five-bpm");
 const btnIncreaseFiveBpm = document.getElementById("increase-five-bpm");
-const btnDecreaseBeats = document.getElementById("decrease-beats");
-const btnIncreaseBeats = document.getElementById("increase-beats");
+const btnDecreaseNumerator = document.getElementById("decrease-numerator");
+const btnIncreaseNumerator = document.getElementById("increase-numerator");
+const btnDecreaseDenominator = document.getElementById("decrease-denominator");
+const btnIncreaseDenominator = document.getElementById("increase-denominator");
 
 const bpmText = document.getElementById("bpm");
 const numeratorText = document.getElementById("numerator");
+const denominatorText = document.getElementById("denominator");
 const beats = document.getElementById("beats");
 
 
@@ -34,6 +37,7 @@ let accentBuffer = null;
 
 let bpm = 100;
 let numerator = numeratorText.innerText;
+let denominator = denominatorText.innerText;
 
 let currentBeat = 0;
 let nextNoteTime = 0;
@@ -83,8 +87,10 @@ function playSound(buffer, time) {
 // TIMING
 // =====================
 
+let timing = 60
+
 function getBeatLength() {
-    return 60 / bpm;
+    return timing / bpm;
 }
 
 
@@ -184,11 +190,11 @@ function decreaseBpm(val) {
 }
 
 
-// =====================
-// BPM CONTROL
-// =====================
+// ==========================
+// TIME SIGNATURE CONTROL
+// ==========================
 
-function increaseBeats() {
+function increaseNumerator() {
     numerator++;
     numeratorText.innerText = numerator;
     const beatDiv = document.createElement("div");
@@ -196,10 +202,25 @@ function increaseBeats() {
     beats.appendChild(beatDiv);
 }
 
-function decreaseBeats() {
+function decreaseNumerator() {
+    if (numerator == 1) return;
     numerator--;
     numeratorText.innerText = numerator;
     beats.children[beats.children.length - 1].remove();
+}
+
+function increaseDenominator() {
+    timing /= 2;
+    denominator *= 2;
+    denominatorText.innerText = denominator;
+}
+
+function decreaseDenominator() {
+    if (denominator > 1) {
+        timing *= 2;
+    }
+    denominator = Math.max(1, denominator / 2);
+    denominatorText.innerText = denominator;
 }
 
 
@@ -220,5 +241,9 @@ btnIncreaseBpm.addEventListener("click", () => increaseBpm(1));
 btnDecreaseFiveBpm.addEventListener("click", () => decreaseBpm(5));
 btnIncreaseFiveBpm.addEventListener("click", () => increaseBpm(5));
 
-btnDecreaseBeats.addEventListener("click", decreaseBeats);
-btnIncreaseBeats.addEventListener("click", increaseBeats);
+btnDecreaseNumerator.addEventListener("click", decreaseNumerator);
+btnIncreaseNumerator.addEventListener("click", increaseNumerator);
+
+
+btnDecreaseDenominator.addEventListener("click", decreaseDenominator);
+btnIncreaseDenominator.addEventListener("click", increaseDenominator);
