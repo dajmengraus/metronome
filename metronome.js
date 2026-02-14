@@ -18,6 +18,7 @@ const btnIncreaseDenominator = document.getElementById("increase-denominator");
 const bpmText = document.getElementById("bpm");
 const numeratorText = document.getElementById("numerator");
 const denominatorText = document.getElementById("denominator");
+const soundDropdown = document.getElementById("sound-dropdown");
 const beats = document.getElementById("beats");
 
 
@@ -57,18 +58,30 @@ const scheduleAhead = 0.1; // sec
 // AUDIO LOADING
 // =====================
 
+const soundMap = {
+    "beat-1": {
+        beat: "audio/beat.mp3",
+        accent: "audio/beat-accent.mp3"
+    },
+    "beat-2": {
+        beat: "audio/beat-2.mp3",
+        accent: "audio/beat-accent-2.mp3"
+    }
+}
+
 async function loadSound(url) {
     const res = await fetch(url);
     const buffer = await res.arrayBuffer();
     return await audioCtx.decodeAudioData(buffer);
 }
 
-async function initAudio() {
-    beatBuffer = await loadSound("audio/beat.mp3");
-    accentBuffer = await loadSound("audio/beat-accent.mp3");
+async function loadSelectedSound(key) {
+    const config = soundMap[key];
+    beatBuffer = await loadSound(config.beat);
+    accentBuffer = await loadSound(config.accent);
 }
 
-initAudio();
+loadSelectedSound("beat-1");
 
 
 // =====================
@@ -247,3 +260,14 @@ btnIncreaseNumerator.addEventListener("click", increaseNumerator);
 
 btnDecreaseDenominator.addEventListener("click", decreaseDenominator);
 btnIncreaseDenominator.addEventListener("click", increaseDenominator);
+
+soundDropdown.addEventListener("change", async (e) => {
+    const selected = e.target.value;
+
+    await loadSelectedSound(selected);
+
+    if (schedulerID) {
+        stop();
+        start();
+    }
+});
