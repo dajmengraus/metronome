@@ -10,33 +10,54 @@
 </head>
 
 <body>
+    <header>
+        <img class="logo" src="img/logo-white.png" alt="Ssyc">
+    </header>
     <div class="app">
-        <h1>Metronome</h1>
-        <div class="time-signature">
-            <h2>Time signature:
-            <div class="numerator">
-                <button type="button" class="btn-primary" id="decrease-numerator">-</button>
-                <h2 id="numerator">4</h2>
-                <button type="button" class="btn-primary" id="increase-numerator">+</button>
+        <section class="top">
+            <div class="tap">
+                <!-- TODO: add tap tempo functionality -->
+                <p>Tap</p>
             </div>
-            <div class="denominator">
-                <button type="button" class="btn-primary" id="decrease-denominator">-</button>
-                <h2 id="denominator">4</h2>
-                <button type="button" class="btn-primary" id="increase-denominator">+</button>
+            <div class="bpm-circle">
+                <p>BPM</p>
+                <h2 id="bpm">100</h2>
+                <!-- TODO: Add tempo text functionality based on bpm -->
+                <p class="tempo">Allegretto</p>
             </div>
-        </div>
-        
+            <div class="time-signature">
+                <div class="numerator">
+                    <button type="button" class="btn-primary" id="decrease-numerator">-</button>
+                    <h2 id="numerator">4</h2>
+                    <button type="button" class="btn-primary" id="increase-numerator">+</button>
+                </div>
+                <div class="denominator">
+                    <button type="button" class="btn-primary" id="decrease-denominator">-</button>
+                    <h2 id="denominator">4</h2>
+                    <button type="button" class="btn-primary" id="increase-denominator">+</button>
+                </div>
+            </div>
+        </section>
 
-        <h2>BPM: <span id="bpm">100</span></h2>
-        <div class="slider-container">
-            <input type="range" min="30" max="300" value="100" class="slider" id="slider">
-        </div>
-        <div class="change-bpm">
+        <section class="beats-section">
+            <div class="beats" id="beats">
+                <div class="beat beat--accent"></div>
+                <div class="beat"></div>
+                <div class="beat"></div>
+                <div class="beat"></div>
+            </div>
+        </section>
+
+        <section class="tempo-section">
             <button type="button" class="btn-primary" id="decrease-five-bpm">--</button>
             <button type="button" class="btn-primary" id="decrease-bpm">-</button>
+            <div class="slider-container">
+                <input type="range" min="30" max="300" value="100" class="slider" id="slider">
+            </div>
             <button type="button" class="btn-primary" id="increase-bpm">+</button>
             <button type="button" class="btn-primary" id="increase-five-bpm">++</button>
-        </div>
+        </section>
+
         <div class="sound-dropdown">
             <label for="sound">Choose a metrnome sound:</label>
             <select name="sound" id="sound-dropdown">
@@ -44,12 +65,7 @@
                 <option value="beat-2">Beat 2</option>
             </select>
         </div>
-        <div class="beats" id="beats">
-            <div class="beat beat--accent"></div>
-            <div class="beat"></div>
-            <div class="beat"></div>
-            <div class="beat"></div>
-        </div>
+
         <div class="start-stop">
             <button type="button" class="btn-primary" id="btn-start">Start</button>
             <button type="button" class="btn-primary" id="btn-stop">Stop</button>

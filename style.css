@@ -1,7 +1,7 @@
 @import "normalize.css";
 
 :root {
-    --color-bg-primary: #111;
+    --color-bg-primary: #1f1f1f;
     --color-text-primary: white;
     --color-beat: yellow;
     --color-beat-accent: orange;
@@ -23,12 +23,44 @@ body {
     font-family: var(--font);
 }
 
+.logo {
+    height: 130px;
+    width: auto;
+}
+
 .app {
-    min-height: 100vh;
+    display: flex;
+    width: 50%;
+    margin: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+}
+
+.top {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tap {
+    background: var(--color-btn-primary);
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+.bpm-circle {
+    background: var(--color-btn-primary);
+    padding: 0.5rem;
+    border-radius: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 12rem;
+    aspect-ratio: 1/1;
 }
 
 .time-signature {
@@ -52,8 +84,13 @@ body {
     gap: 1rem;
 }
 
+.beats-section {
+    width: 100%;
+}
+
 .beats {
     display: flex;
+    width: 100%;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
@@ -73,6 +110,21 @@ body {
 
 .beat--selected {
     border: 0.5rem solid red;
+}
+
+.tempo-section {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.slider-container {
+    width: 60%;
+}
+
+.slider-container input{
+    width: 100%;
 }
 
 .start-stop {
