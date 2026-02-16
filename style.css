@@ -11,13 +11,17 @@
     --accent: #ff6363;
     --accent-strong: #ff4a52;
     --track: #d5d7dc;
+    --beat-hit: #5ab5ff;
+    --beat-hit-glow: rgba(90, 181, 255, 0.42);
+    --beat-accent-hit-glow: rgba(255, 99, 99, 0.5);
     --border-soft: rgba(255, 255, 255, 0.08);
     --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.28);
     --radius-sm: 0.9rem;
     --radius-md: 1.3rem;
     --radius-round: 999px;
-    --font: "Sora", "Avenir Next", "Segoe UI", sans-serif;
+    --font-ui: "Sora", "Segoe UI", sans-serif;
+    --font-display: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
 }
 
 *,
@@ -34,18 +38,17 @@ body {
         radial-gradient(circle at 80% 0%, #222735 0%, transparent 31%),
         linear-gradient(135deg, #161920 0%, #1a1d25 56%, #171a20 100%);
     color: var(--text);
-    font-family: var(--font);
+    font-family: var(--font-ui);
     letter-spacing: 0.01em;
 }
 
 header {
-    width: min(1040px, 96vw);
-    margin: 0 auto;
-    padding-top: 1.1rem;
+    width: 100%;
+    padding: 1rem;
 }
 
 .logo {
-    height: 96px;
+    height: 8rem;
     width: auto;
     opacity: 0.95;
 }
@@ -115,9 +118,11 @@ header {
 
 #bpm {
     margin: 0.1rem 0;
+    font-family: var(--font-display);
     font-weight: 500;
     font-size: clamp(3rem, 9vw, 5.25rem);
     line-height: 1;
+    letter-spacing: 0.02em;
 }
 
 .tempo {
@@ -146,6 +151,7 @@ header {
     margin: 0;
     width: 1.5ch;
     text-align: center;
+    font-family: var(--font-display);
     font-size: clamp(2.25rem, 4vw, 3.2rem);
     line-height: 1;
     font-weight: 700;
@@ -183,9 +189,18 @@ header {
     box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.24);
 }
 
-.beat--accent,
-.beat--selected {
+.beat--accent {
     background: var(--accent);
+}
+
+.beat--hit {
+    background: var(--beat-hit);
+    box-shadow: 0 0 14px var(--beat-hit-glow);
+}
+
+.beat--hit-accent {
+    background: var(--accent);
+    box-shadow: 0 0 14px var(--beat-accent-hit-glow);
 }
 
 .tempo-section {
@@ -286,22 +301,18 @@ header {
     justify-content: center;
 }
 
-#btn-start,
-#btn-stop {
+#btn-toggle-metronome {
     width: 114px;
     height: 114px;
     border-radius: 50%;
     font-size: 1.04rem;
     font-weight: 700;
     letter-spacing: 0.03em;
-}
-
-#btn-start {
     background: linear-gradient(145deg, #ebedf1, #d4d8e0);
     color: var(--accent-strong);
 }
 
-#btn-stop {
+#btn-toggle-metronome.is-running {
     background: rgba(236, 236, 240, 0.12);
     color: #cfd5e0;
     border: 1px solid var(--border-soft);
@@ -327,23 +338,8 @@ header {
 }
 
 @media (max-width: 900px) {
-    .top {
-        grid-template-columns: 1fr;
-        justify-items: center;
-        gap: 1rem;
-    }
 
-    .time-signature {
-        flex-direction: row;
-        gap: 1.4rem;
-    }
-
-    .tempo-section {
-        grid-template-columns: auto auto 1fr auto auto;
-    }
-
-    #btn-start,
-    #btn-stop {
+    #btn-toggle-metronome {
         width: 96px;
         height: 96px;
     }
@@ -403,8 +399,7 @@ header {
         flex-direction: column;
     }
 
-    #btn-start,
-    #btn-stop {
+    #btn-toggle-metronome {
         width: 84px;
         height: 84px;
         font-size: 0.92rem;

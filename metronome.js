@@ -2,8 +2,7 @@
 // UI ELEMENTS
 // =====================
 
-const btnStart = document.getElementById("btn-start");
-const btnStop = document.getElementById("btn-stop");
+const btnToggleMetronome = document.getElementById("btn-toggle-metronome");
 
 const slider = document.getElementById("slider");
 const btnDecreaseBpm = document.getElementById("decrease-bpm");
@@ -16,6 +15,7 @@ const btnDecreaseDenominator = document.getElementById("decrease-denominator");
 const btnIncreaseDenominator = document.getElementById("increase-denominator");
 
 const bpmText = document.getElementById("bpm");
+const tempoText = document.querySelector(".tempo");
 const numeratorText = document.getElementById("numerator");
 const denominatorText = document.getElementById("denominator");
 const soundDropdown = document.getElementById("sound-dropdown");
@@ -113,7 +113,8 @@ function getBeatLength() {
 
 function clearBeats() {
     for (const el of beats.children) {
-        el.classList.remove("beat--selected");
+        el.classList.remove("beat--hit");
+        el.classList.remove("beat--hit-accent");
     }
 }
 
@@ -124,7 +125,11 @@ function updateUI(beat, time) {
     setTimeout(() => {
 
         clearBeats();
-        beats.children[beat].classList.add("beat--selected");
+        if (beat === 0) {
+            beats.children[beat].classList.add("beat--hit-accent");
+            return;
+        }
+        beats.children[beat].classList.add("beat--hit");
 
     }, delay);
 }
@@ -171,6 +176,7 @@ function start() {
     nextNoteTime = audioCtx.currentTime + 0.05;
 
     schedulerID = setInterval(scheduler, lookahead);
+    updateToggleButtonUI(true);
 }
 
 
@@ -182,16 +188,61 @@ function stop() {
     clearBeats();
 
     currentBeat = 0;
+    updateToggleButtonUI(false);
 }
+
+function updateToggleButtonUI(isRunning) {
+    btnToggleMetronome.innerText = isRunning ? "Stop" : "Start";
+    btnToggleMetronome.setAttribute("aria-pressed", String(isRunning));
+    btnToggleMetronome.classList.toggle("is-running", isRunning);
+}
+
+function toggleMetronome() {
+    if (schedulerID) {
+        stop();
+        return;
+    }
+    start();
+}
+
+updateToggleButtonUI(false);
 
 
 // =====================
 // BPM CONTROL
 // =====================
 
+const tempoRanges = [
+    { name: "Grave", min: 20, max: 40 },
+    { name: "Largo", min: 40, max: 60 },
+    { name: "Lento", min: 45, max: 60 },
+    { name: "Adagio", min: 66, max: 76 },
+    { name: "Andante", min: 76, max: 108 },
+    { name: "Moderato", min: 108, max: 120 },
+    { name: "Allegretto", min: 112, max: 120 },
+    { name: "Allegro", min: 120, max: 156 },
+    { name: "Vivace", min: 156, max: 176 },
+    { name: "Presto", min: 168, max: 200 },
+    { name: "Prestissimo", min: 200, max: 300 }
+];
+
+function getTempoName(value) {
+    const bpmValue = Number(value);
+    const matchingRanges = tempoRanges.filter((range) => bpmValue >= range.min && bpmValue <= range.max);
+
+    if (matchingRanges.length === 0) {
+        return bpmValue < tempoRanges[0].min ? tempoRanges[0].name : tempoRanges[tempoRanges.length - 1].name;
+    }
+
+    // When ranges overlap, prefer the most specific range.
+    matchingRanges.sort((a, b) => (a.max - a.min) - (b.max - b.min));
+    return matchingRanges[0].name;
+}
+
 function updateBpm(value) {
     bpm = Math.max(1, value);
     bpmText.innerText = bpm;
+    tempoText.innerText = getTempoName(bpm);
 }
 
 function increaseBpm(val) {
@@ -201,6 +252,8 @@ function increaseBpm(val) {
 function decreaseBpm(val) {
     updateBpm(bpm - val);
 }
+
+updateBpm(bpm);
 
 
 // ==========================
@@ -241,8 +294,7 @@ function decreaseDenominator() {
 // EVENTS
 // =====================
 
-btnStart.addEventListener("click", start);
-btnStop.addEventListener("click", stop);
+btnToggleMetronome.addEventListener("click", toggleMetronome);
 
 slider.oninput = function() {
     updateBpm(this.value);
