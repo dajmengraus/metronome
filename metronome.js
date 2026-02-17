@@ -20,6 +20,7 @@ const numeratorText = document.getElementById("numerator");
 const denominatorText = document.getElementById("denominator");
 const soundDropdown = document.getElementById("sound-dropdown");
 const beats = document.getElementById("beats");
+const tap = document.getElementById("tap");
 
 
 // =====================
@@ -44,6 +45,8 @@ let currentBeat = 0;
 let nextNoteTime = 0;
 
 let schedulerID = null;
+let tapTimes = [];
+let tapResetTimeoutID = null;
 
 
 // =====================
@@ -240,9 +243,15 @@ function getTempoName(value) {
 }
 
 function updateBpm(value) {
-    bpm = Math.max(1, value);
+    const minBpm = Number(slider.min) || 1;
+    const maxBpm = Number(slider.max) || 300;
+    const parsed = Number(value);
+    if (Number.isNaN(parsed)) return;
+
+    bpm = Math.min(maxBpm, Math.max(minBpm, Math.round(parsed)));
     bpmText.innerText = bpm;
     tempoText.innerText = getTempoName(bpm);
+    slider.value = String(bpm);
 }
 
 function increaseBpm(val) {
@@ -291,6 +300,57 @@ function decreaseDenominator() {
 
 
 // =====================
+// TAP TEMPO
+// =====================
+
+const tapTempoWindowSize = 5;
+const tapTempoResetMs = 2000;
+const tapMinIntervalMs = 200;  // 300 BPM
+const tapMaxIntervalMs = 2000; // 30 BPM
+
+function resetTapTempo() {
+    tapTimes = [];
+    clearTimeout(tapResetTimeoutID);
+    tapResetTimeoutID = null;
+}
+
+function handleTapTempo() {
+    const now = performance.now();
+    const previousTap = tapTimes[tapTimes.length - 1];
+
+    if (previousTap) {
+        const interval = now - previousTap;
+        if (interval < tapMinIntervalMs || interval > tapMaxIntervalMs) {
+            tapTimes = [now];
+        } else {
+            tapTimes.push(now);
+        }
+    } else {
+        tapTimes.push(now);
+    }
+
+    if (tapTimes.length > tapTempoWindowSize) {
+        tapTimes.shift();
+    }
+
+    if (tapTimes.length >= 2) {
+        let totalInterval = 0;
+
+        for (let i = 1; i < tapTimes.length; i++) {
+            totalInterval += tapTimes[i] - tapTimes[i - 1];
+        }
+
+        const averageInterval = totalInterval / (tapTimes.length - 1);
+        const tappedBpm = 60000 / averageInterval;
+        updateBpm(tappedBpm);
+    }
+
+    clearTimeout(tapResetTimeoutID);
+    tapResetTimeoutID = setTimeout(resetTapTempo, tapTempoResetMs);
+}
+
+
+// =====================
 // EVENTS
 // =====================
 
@@ -312,6 +372,7 @@ btnIncreaseNumerator.addEventListener("click", increaseNumerator);
 
 btnDecreaseDenominator.addEventListener("click", decreaseDenominator);
 btnIncreaseDenominator.addEventListener("click", increaseDenominator);
+tap.addEventListener("click", handleTapTempo);
 
 soundDropdown.addEventListener("change", async (e) => {
     const selected = e.target.value;
