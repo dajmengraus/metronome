@@ -15,6 +15,7 @@ const btnDecreaseDenominator = document.getElementById("decrease-denominator");
 const btnIncreaseDenominator = document.getElementById("increase-denominator");
 
 const bpmText = document.getElementById("bpm");
+const bpmCircle = document.getElementById("bpm-circle");
 const tempoText = document.querySelector(".tempo");
 const numeratorText = document.getElementById("numerator");
 const denominatorText = document.getElementById("denominator");
@@ -119,6 +120,11 @@ function clearBeats() {
         el.classList.remove("beat--hit");
         el.classList.remove("beat--hit-accent");
     }
+    if (!bpmCircle) return;
+    bpmCircle.classList.remove("bpm-circle--highlight--accent");
+    bpmCircle.classList.remove("bpm-circle--highlight");
+    bpmCircle.classList.remove("bpm-circle--pulse");
+    bpmCircle.classList.remove("bpm-circle--pulse-accent");
 }
 
 function updateUI(beat, time) {
@@ -130,11 +136,33 @@ function updateUI(beat, time) {
         clearBeats();
         if (beat === 0) {
             beats.children[beat].classList.add("beat--hit-accent");
+            if (bpmCircle) {
+                bpmCircle.classList.add("bpm-circle--highlight--accent");
+                pulseBpmCircle(true);
+            }
             return;
         }
         beats.children[beat].classList.add("beat--hit");
+        if (bpmCircle) {
+            bpmCircle.classList.add("bpm-circle--highlight");
+            pulseBpmCircle(false);
+        }
 
     }, delay);
+}
+
+
+// =====================
+// BPM CIRCLE
+// =====================
+
+function pulseBpmCircle(isAccent) {
+    if (!bpmCircle) return;
+
+    bpmCircle.classList.remove("bpm-circle--pulse");
+    bpmCircle.classList.remove("bpm-circle--pulse-accent");
+    void bpmCircle.offsetWidth;
+    bpmCircle.classList.add(isAccent ? "bpm-circle--pulse-accent" : "bpm-circle--pulse");
 }
 
 
