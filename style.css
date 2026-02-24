@@ -13,10 +13,10 @@
     --track: #d5d7dc;
     --beat-hit: #5ab5ff;
     --beat-hit-strong: #86cbff;
-    --beat-hit-glow: rgba(90, 181, 255, 0.42);
-    --beat-accent-hit-glow: rgba(255, 99, 99, 0.5);
     --sunburst: #f0bf33;
     --sunburst-strong: #e7ad11;
+    --beat-hit-glow: rgba(90, 181, 255, 0.42);
+    --beat-accent-hit-glow: rgba(255, 99, 99, 0.5);
     --border-soft: rgba(255, 255, 255, 0.08);
     --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.28);
@@ -25,6 +25,24 @@
     --radius-round: 999px;
     --font-ui: "Sora", "Segoe UI", sans-serif;
     --font-display: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+@property --tick-len {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@property --bar-height {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0px;
+}
+
+@property --pulse-bar-height {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0px;
 }
 
 *,
@@ -143,11 +161,22 @@ header {
 }
 
 .bpm-circle {
-    position: relative;
-    overflow: visible;
+    --circle-size: clamp(180px, 28vw, 254px);
+    --circle-radius: calc(var(--circle-size) / 2);
+    --tick-len: 0.95deg;
+    --tick-gap: 8deg;
+    --bar-height: 14px;
+    --bar-height-max: 24px;
+    --pulse-bar-height: 0px;
+    --pulse-bar-height-max: 46px;
+    --pulse-tick-len: 1.35deg;
+    --pulse-tick-gap: 10deg;
+    --ring-inner-offset: 10px;
     --ring-color: var(--sunburst);
     --ring-color-strong: var(--sunburst-strong);
-    width: clamp(180px, 28vw, 254px);
+    position: relative;
+    overflow: visible;
+    width: var(--circle-size);
     aspect-ratio: 1/1;
     border-radius: 50%;
     background: radial-gradient(circle at 36% 24%, #f1f2f5 0%, var(--surface) 64%, #cbced7 100%);
@@ -158,63 +187,65 @@ header {
     justify-content: center;
     box-shadow: var(--shadow-lg);
     text-align: center;
-    border: 2px solid var(--sunburst);
     z-index: 0;
 }
 
 .bpm-circle::before,
 .bpm-circle::after {
     content: "";
+    padding: 0;
     position: absolute;
-    inset: -46px;
+    inset: -35px;
     border-radius: 50%;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
+    transform-origin: center;
 }
 
 .bpm-circle::before {
+    opacity: 0.95;
     background: repeating-conic-gradient(
         from 0deg,
-        var(--ring-color) 0deg 0.95deg,
-        transparent 0.95deg 3deg
+        var(--ring-color) 0deg var(--tick-len),
+        transparent var(--tick-len) var(--tick-gap)
     );
     -webkit-mask: radial-gradient(
         farthest-side,
-        transparent calc(100% - 28px),
-        #000 calc(100% - 28px),
-        #000 calc(100% - 2px),
-        transparent calc(100% - 2px)
+        transparent calc(100% - (var(--ring-inner-offset) + var(--bar-height))),
+        #000 calc(100% - (var(--ring-inner-offset) + var(--bar-height))),
+        #000 calc(100% - var(--ring-inner-offset)),
+        transparent calc(100% - var(--ring-inner-offset))
     );
     mask: radial-gradient(
         farthest-side,
-        transparent calc(100% - 28px),
-        #000 calc(100% - 28px),
-        #000 calc(100% - 2px),
-        transparent calc(100% - 2px)
+        transparent calc(100% - (var(--ring-inner-offset) + var(--bar-height))),
+        #000 calc(100% - (var(--ring-inner-offset) + var(--bar-height))),
+        #000 calc(100% - var(--ring-inner-offset)),
+        transparent calc(100% - var(--ring-inner-offset))
     );
 }
 
 .bpm-circle::after {
     inset: -54px;
+    opacity: 0;
     background: repeating-conic-gradient(
-        from -4deg,
-        var(--ring-color-strong) 0deg 0.7deg,
-        transparent 0.7deg 12deg
+        from 0deg,
+        var(--ring-color-strong) 0deg var(--pulse-tick-len),
+        transparent var(--pulse-tick-len) var(--pulse-tick-gap)
     );
-    opacity: 0.85;
     -webkit-mask: radial-gradient(
         farthest-side,
-        transparent calc(100% - 42px),
-        #000 calc(100% - 42px),
-        #000 calc(100% - 16px),
-        transparent calc(100% - 16px)
+        transparent calc(100% - (var(--ring-inner-offset) + var(--pulse-bar-height))),
+        #000 calc(100% - (var(--ring-inner-offset) + var(--pulse-bar-height))),
+        #000 calc(100% - var(--ring-inner-offset)),
+        transparent calc(100% - var(--ring-inner-offset))
     );
     mask: radial-gradient(
         farthest-side,
-        transparent calc(100% - 42px),
-        #000 calc(100% - 42px),
-        #000 calc(100% - 16px),
-        transparent calc(100% - 16px)
+        transparent calc(100% - (var(--ring-inner-offset) + var(--pulse-bar-height))),
+        #000 calc(100% - (var(--ring-inner-offset) + var(--pulse-bar-height))),
+        #000 calc(100% - var(--ring-inner-offset)),
+        transparent calc(100% - var(--ring-inner-offset))
     );
 }
 
@@ -223,22 +254,58 @@ header {
     z-index: 1;
 }
 
+.bpm-circle > .bpm-beams {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bpm-beam {
+    --beam-anchor-gap: 0px;
+    --beam-anchor-distance: calc(var(--circle-radius));
+    position: absolute;
+    left: 50%;
+    top: 44%;
+    width: var(--beam-width, 3px);
+    height: var(--beam-len, 36px);
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0;
+    transform-origin: center bottom;
+    transform:
+        translate(-50%, -50%)
+        rotate(var(--angle))
+        translateY(calc(-1 * var(--beam-anchor-distance)))
+        scaleY(0);
+}
+
 
 .bpm-circle--highlight--accent {
     border-color: var(--accent-strong);
+    border: 3px solid var(--accent-strong);
 }
 
 .bpm-circle--highlight {
     border-color: var(--beat-hit);
+    border: 3px solid var(--beat-hit);
 }
 
 .bpm-circle--pulse::before {
-    animation: sunburst-pulse 200ms ease-out;
+    animation: sunburst-base-pulse 210ms ease-out;
 }
 
-.bpm-circle--pulse-accent::before,
+.bpm-circle--pulse-accent::before {
+    animation: sunburst-base-pulse-accent 240ms ease-out;
+}
+
+.bpm-circle--pulse::after {
+    animation: none;
+}
+
 .bpm-circle--pulse-accent::after {
-    animation: sunburst-pulse-accent 260ms ease-out;
+    animation: none;
 }
 
 .bpm-circle--pulse {
@@ -251,25 +318,165 @@ header {
     --ring-color-strong: var(--accent-strong);
 }
 
-@keyframes sunburst-pulse {
+.bpm-circle--pulse .bpm-beams {
+    color: var(--beat-hit);
+}
+
+.bpm-circle--pulse-accent .bpm-beams {
+    color: var(--accent);
+}
+
+.bpm-circle--pulse .bpm-beam {
+    animation: bpm-beam-thump 240ms cubic-bezier(.2, .75, .2, 1);
+}
+
+.bpm-circle--pulse-accent .bpm-beam {
+    animation: bpm-beam-thump-accent 290ms cubic-bezier(.2, .75, .2, 1);
+}
+
+@keyframes sunburst-base-pulse {
     0% {
-        transform: scale(0.965);
-        opacity: 0.72;
+        transform: scale(0.985);
+        opacity: 0.75;
+    }
+    45% {
+        transform: scale(1.018);
+        opacity: 1;
     }
     100% {
         transform: scale(1);
-        opacity: 1;
+        opacity: 0.95;
     }
 }
 
-@keyframes sunburst-pulse-accent {
+@keyframes sunburst-base-pulse-accent {
     0% {
-        transform: scale(0.93);
-        opacity: 0.62;
+        transform: scale(0.975);
+        opacity: 0.7;
+    }
+    40% {
+        transform: scale(1.03);
+        opacity: 1;
     }
     100% {
-        transform: scale(1.02);
+        transform: scale(1);
+        opacity: 0.95;
+    }
+}
+
+@keyframes sunburst-beam-pulse {
+    0% {
+        --pulse-bar-height: 0px;
+        opacity: 0;
+        transform: scale(1);
+    }
+    28% {
+        --pulse-bar-height: var(--pulse-bar-height-max);
+        opacity: 0.95;
+        transform: scale(1);
+    }
+    72% {
+        --pulse-bar-height: 10px;
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    100% {
+        --pulse-bar-height: 0px;
+        opacity: 0.05;
+        transform: scale(1);
+    }
+}
+
+@keyframes sunburst-beam-pulse-accent {
+    0% {
+        --pulse-bar-height: 0px;
+        opacity: 0;
+        transform: scale(1);
+    }
+    24% {
+        --pulse-bar-height: calc(var(--pulse-bar-height-max) + 10px);
         opacity: 1;
+        transform: scale(1);
+    }
+    68% {
+        --pulse-bar-height: 14px;
+        opacity: 0.72;
+        transform: scale(1);
+    }
+    100% {
+        --pulse-bar-height: 0px;
+        opacity: 0.06;
+        transform: scale(1);
+    }
+}
+
+@keyframes bpm-beam-thump {
+    0% {
+        opacity: 0;
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--angle))
+            translateY(calc(-1 * var(--beam-anchor-distance)))
+            scaleY(0);
+    }
+    22% {
+        opacity: 0.95;
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--angle))
+            translateY(calc(-1 * var(--beam-anchor-distance)))
+            scaleY(1);
+    }
+    68% {
+        opacity: 0.55;
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--angle))
+            translateY(calc(-1 * var(--beam-anchor-distance)))
+            scaleY(0.25);
+    }
+    100% {
+        opacity: 0;
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--angle))
+            translateY(calc(-1 * var(--beam-anchor-distance)))
+            scaleY(0);
+    }
+}
+
+@keyframes bpm-beam-thump-accent {
+    0% {
+        opacity: 0;
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--angle))
+            translateY(calc(-1 * var(--beam-anchor-distance)))
+            scaleY(0);
+    }
+    20% {
+        opacity: 1;
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--angle))
+            translateY(calc(-1 * var(--beam-anchor-distance)))
+            scaleY(1.2);
+    }
+    62% {
+        opacity: 0.72;
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--angle))
+            translateY(calc(-1 * var(--beam-anchor-distance)))
+            scaleY(0.34);
+    }
+    100% {
+        opacity: 0;
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--angle))
+            translateY(calc(-1 * var(--beam-anchor-distance)))
+            scaleY(0);
     }
 }
 
@@ -289,7 +496,6 @@ header {
 }
 
 .tempo {
-    color: var(--sunburst-strong);
     font-size: clamp(1.2rem, 2vw, 1.9rem);
 }
 

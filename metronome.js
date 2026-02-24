@@ -25,6 +25,39 @@ const tap = document.getElementById("tap");
 
 
 // =====================
+// BPM CIRCLE DECOR
+// =====================
+
+function initBpmBeamLayer() {
+    if (!bpmCircle) return;
+    if (bpmCircle.querySelector(".bpm-beams")) return;
+
+    const beamLayer = document.createElement("div");
+    beamLayer.className = "bpm-beams";
+
+    const beamCount = 40;
+
+    for (let i = 0; i < beamCount; i++) {
+        const beam = document.createElement("span");
+        const angle = (360 / beamCount) * i;
+        const beamLength = 28 + Math.random() * 20;
+        const beamWidth = i % 5 === 0 ? 4 : 3;
+
+        beam.className = "bpm-beam";
+        beam.style.setProperty("--angle", `${angle}deg`);
+        beam.style.setProperty("--beam-len", `35px`);
+        beam.style.setProperty("--beam-width", `7px`);
+
+        beamLayer.appendChild(beam);
+    }
+
+    bpmCircle.appendChild(beamLayer);
+}
+
+initBpmBeamLayer();
+
+
+// =====================
 // AUDIO ENGINE
 // =====================
 
