@@ -292,22 +292,6 @@ header {
     border: 3px solid var(--beat-hit);
 }
 
-.bpm-circle--pulse::before {
-    animation: sunburst-base-pulse 210ms ease-out;
-}
-
-.bpm-circle--pulse-accent::before {
-    animation: sunburst-base-pulse-accent 240ms ease-out;
-}
-
-.bpm-circle--pulse::after {
-    animation: none;
-}
-
-.bpm-circle--pulse-accent::after {
-    animation: none;
-}
-
 .bpm-circle--pulse {
     --ring-color: var(--beat-hit);
     --ring-color-strong: var(--beat-hit-strong);
@@ -327,11 +311,11 @@ header {
 }
 
 .bpm-circle--pulse .bpm-beam {
-    animation: bpm-beam-thump 240ms cubic-bezier(.2, .75, .2, 1);
+    animation: bpm-beam-thump 250ms cubic-bezier(.2, .75, .2, 1);
 }
 
 .bpm-circle--pulse-accent .bpm-beam {
-    animation: bpm-beam-thump-accent 290ms cubic-bezier(.2, .75, .2, 1);
+    animation: bpm-beam-thump-accent 250ms cubic-bezier(.2, .75, .2, 1);
 }
 
 @keyframes sunburst-base-pulse {
@@ -361,52 +345,6 @@ header {
     100% {
         transform: scale(1);
         opacity: 0.95;
-    }
-}
-
-@keyframes sunburst-beam-pulse {
-    0% {
-        --pulse-bar-height: 0px;
-        opacity: 0;
-        transform: scale(1);
-    }
-    28% {
-        --pulse-bar-height: var(--pulse-bar-height-max);
-        opacity: 0.95;
-        transform: scale(1);
-    }
-    72% {
-        --pulse-bar-height: 10px;
-        opacity: 0.6;
-        transform: scale(1);
-    }
-    100% {
-        --pulse-bar-height: 0px;
-        opacity: 0.05;
-        transform: scale(1);
-    }
-}
-
-@keyframes sunburst-beam-pulse-accent {
-    0% {
-        --pulse-bar-height: 0px;
-        opacity: 0;
-        transform: scale(1);
-    }
-    24% {
-        --pulse-bar-height: calc(var(--pulse-bar-height-max) + 10px);
-        opacity: 1;
-        transform: scale(1);
-    }
-    68% {
-        --pulse-bar-height: 14px;
-        opacity: 0.72;
-        transform: scale(1);
-    }
-    100% {
-        --pulse-bar-height: 0px;
-        opacity: 0.06;
-        transform: scale(1);
     }
 }
 
